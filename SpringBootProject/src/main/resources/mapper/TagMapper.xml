@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.TagMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.Tag">
+    <id column="tag_id" jdbcType="INTEGER" property="tagId" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="art_id" jdbcType="VARCHAR" property="artId" />
+    <result column="tag_name" jdbcType="VARCHAR" property="tagName" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <resultMap id="TagDTOResultMap" extends="BaseResultMap" type="com.example.springbootproject.entity.TagDTO">
+     <collection property="works" ofType="com.example.springbootproject.entity.Video"
+                 select="com.example.springbootproject.dao.VideoMapper.selectByPrimaryKey" column="work_id"></collection>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    tag_id, work_id, tag_name, del_flag
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tag
+    where tag_id = #{tagId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectTagsByVidId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tag
+    where work_id = #{workId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectVideosByTagName" parameterType="java.lang.String" resultMap="TagDTOResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tag
+    where tag_name = #{tagName,jdbcType=VARCHAR}
+  </select>
+
+  <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update tag
+    set del_flag = 1
+    where tag_id = #{tagId,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insert" parameterType="com.example.springbootproject.entity.Tag">
+    insert into tag (tag_id, work_id, tag_name,
+      del_flag)
+    values (#{tagId,jdbcType=VARCHAR}, #{workId,jdbcType=VARCHAR}, #{tagName,jdbcType=VARCHAR},
+      #{delFlag,jdbcType=CHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.example.springbootproject.entity.Tag">
+    insert into tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tagId != null">
+        tag_id,
+      </if>
+      <if test="workId != null">
+        work_id,
+      </if>
+      <if test="tagName != null">
+        tag_name,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tagId != null">
+        #{tagId,jdbcType=VARCHAR},
+      </if>
+      <if test="workId != null">
+        #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="tagName != null">
+        #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.springbootproject.entity.Tag">
+    update tag
+    <set>
+      <if test="workId != null">
+        work_id = #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="tagName != null">
+        tag_name = #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where tag_id = #{tagId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.springbootproject.entity.Tag">
+    update tag
+    set work_id = #{workId,jdbcType=VARCHAR},
+      tag_name = #{tagName,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where tag_id = #{tagId,jdbcType=VARCHAR}
+  </update>
+</mapper>

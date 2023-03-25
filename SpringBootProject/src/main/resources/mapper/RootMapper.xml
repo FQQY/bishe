@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.RootMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.Root">
+    <id column="root_id" jdbcType="VARCHAR" property="rootId" />
+    <result column="root_account_number" jdbcType="VARCHAR" property="rootAccountNumber" />
+    <result column="root_password" jdbcType="VARCHAR" property="rootPassword" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    root_id, root_account_number, root_password, del_flag
+  </sql>
+
+  <select id="adminLogin" parameterType="com.example.springbootproject.entity.Root" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from root
+    where root_account_number = #{rootAccountNumber}
+    and root_password = #{rootPassword}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from root
+    where root_id = #{rootId,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from root
+    where root_id = #{rootId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.example.springbootproject.entity.Root">
+    insert into root (root_id, root_account_number, root_password, 
+      del_flag)
+    values (#{rootId,jdbcType=VARCHAR}, #{rootAccountNumber,jdbcType=VARCHAR}, #{rootPassword,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=CHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.example.springbootproject.entity.Root">
+    insert into root
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rootId != null">
+        root_id,
+      </if>
+      <if test="rootAccountNumber != null">
+        root_account_number,
+      </if>
+      <if test="rootPassword != null">
+        root_password,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rootId != null">
+        #{rootId,jdbcType=VARCHAR},
+      </if>
+      <if test="rootAccountNumber != null">
+        #{rootAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="rootPassword != null">
+        #{rootPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.springbootproject.entity.Root">
+    update root
+    <set>
+      <if test="rootAccountNumber != null">
+        root_account_number = #{rootAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="rootPassword != null">
+        root_password = #{rootPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where root_id = #{rootId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.springbootproject.entity.Root">
+    update root
+    set root_account_number = #{rootAccountNumber,jdbcType=VARCHAR},
+      root_password = #{rootPassword,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where root_id = #{rootId,jdbcType=VARCHAR}
+  </update>
+</mapper>

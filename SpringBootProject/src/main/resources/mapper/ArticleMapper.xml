@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.ArticleMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.Article">
+        <id column="work_id" jdbcType="VARCHAR" property="workId" />
+        <result column="usr_id" jdbcType="VARCHAR" property="usrId" />
+        <result column="cat_id" jdbcType="INTEGER" property="catId" />
+        <result column="work_title" jdbcType="VARCHAR" property="workTitle" />
+        <result column="work_content" jdbcType="LONGVARCHAR" property="workContent" />
+        <result column="work_upload_time" jdbcType="TIMESTAMP" property="workUploadTime" />
+        <result column="pass_flag" jdbcType="CHAR" property="passFlag" />
+        <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    </resultMap>
+
+    <resultMap id="ArticleDTOResultMap" extends="BaseResultMap" type="com.example.springbootproject.entity.ArticleDTO">
+        <association property="user" javaType="com.example.springbootproject.entity.User">
+            <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
+            <result column="usr_name" jdbcType="VARCHAR" property="usrName" />
+            <result column="usr_password" jdbcType="VARCHAR" property="usrPassword" />
+            <result column="usr_sex" jdbcType="INTEGER" property="usrSex" />
+            <result column="usr_email" jdbcType="VARCHAR" property="usrEmail" />
+            <result column="usr_register_time" jdbcType="TIMESTAMP" property="usrRegisterTime" />
+            <result column="ban_flag" jdbcType="CHAR" property="banFlag" />
+            <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+            <result column="usr_authority" jdbcType="CHAR" property="usrAuthority" />
+        </association>
+        <association property="category" javaType="com.example.springbootproject.entity.Category">
+            <id column="cat_id" jdbcType="INTEGER" property="catId" />
+            <result column="cat_name" jdbcType="VARCHAR" property="catName" />
+            <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        work_id, usr_id, cat_id ,work_title, work_content, work_upload_time, pass_flag, del_flag
+    </sql>
+
+
+    <insert id="insertArticle" parameterType="com.example.springbootproject.entity.Article">
+        insert into work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            work_id,
+            usr_id,
+            cat_id,
+            work_upload_time,
+            work_content,
+            work_title
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{workId,jdbcType=VARCHAR},
+            #{usrId,jdbcType=VARCHAR},
+            #{catId,jdbcType=INTEGER},
+            #{workUploadTime,jdbcType=TIMESTAMP},
+            #{workContent,jdbcType=LONGVARCHAR},
+            #{workTitle,jdbcType=VARCHAR},
+        </trim>
+    </insert>
+
+<!--    查找所有文章 通过审核 -->
+    <select id="selectArticle" parameterType="java.lang.String" resultMap="ArticleDTOResultMap">
+        select
+        *
+        from user join work on user.usr_id = work.usr_id
+        join category on work.cat_id = category.cat_id
+        <where>
+            <if test="workTitle != null and workTitle.length() != 0">
+                work_title like concat(concat('%',#{workTitle,jdbcType=VARCHAR}),'%')
+            </if>
+            and work.work_src is null
+            and work.del_flag = 0
+            and work.pass_flag = 1
+        </where>
+    </select>
+
+<!--    查找某一分类下的所有文章-->
+    <select id="selectArticlesByCatId" parameterType="java.lang.Integer" resultMap="ArticleDTOResultMap">
+        select
+        *
+        from user join work on user.usr_id = work.usr_id
+        join category on work.cat_id = category.cat_id
+        <where>
+            and work.cat_id = #{catId,jdbcType=INTEGER}
+            and work.work_src is null
+            and work.del_flag = 0
+            and work.pass_flag = 1
+        </where>
+    </select>
+
+</mapper>

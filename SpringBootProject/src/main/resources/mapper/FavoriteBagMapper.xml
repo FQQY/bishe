@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.FavoriteBagMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.FavoriteBag">
+    <id column="favb_id" jdbcType="INTEGER" property="favbId" />
+    <result column="usr_id" jdbcType="VARCHAR" property="usrId" />
+    <result column="favb_name" jdbcType="VARCHAR" property="favbName" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <resultMap id="FavoriteBagDTOResultMap" extends="BaseResultMap" type="com.example.springbootproject.entity.FavoriteBagDTO">
+    <collection property="favList"
+                select="com.example.springbootproject.dao.FavoriteMapper.queryByFavbId"
+                column="favb_id">
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    favb_id, usr_id, favb_name, del_flag
+  </sql>
+
+  <select id="selectByFavbId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from favoritebag
+    where favb_id = #{favbId,jdbcType=VARCHAR} and del_flag = 0
+  </select>
+  
+  <select id="selectByUsrId" parameterType="java.lang.String" resultMap="FavoriteBagDTOResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from favoritebag
+    where usr_id = #{usrId,jdbcType=VARCHAR} and del_flag = 0
+  </select>
+
+  <select id="isExistThisFavoriteBag" parameterType="com.example.springbootproject.entity.FavoriteBag" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from favoritebag
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+    and favb_name = #{favbName,jdbcType=VARCHAR}
+    and del_flag = 0
+  </select>
+
+  <update id="deleteByFavbIdAndUsrId" parameterType="com.example.springbootproject.entity.FavoriteBag">
+    update favoritebag
+    set del_flag = 1
+    where favb_id = #{favbId,jdbcType=VARCHAR}
+    and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insertForUsrIdAndFavbName" parameterType="com.example.springbootproject.entity.FavoriteBag">
+    insert into favoritebag ( usr_id, favb_name)
+    values ( #{usrId,jdbcType=VARCHAR}, #{favbName,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByFavbIdAndUsrId" parameterType="com.example.springbootproject.entity.FavoriteBag">
+    update favoritebag
+    set
+        favb_name = #{favbName,jdbcType=VARCHAR}
+    where favb_id = #{favbId,jdbcType=INTEGER}
+    and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="clearResumeFavoriteBagByUsrId">
+    update favoritebag
+    set del_flag = #{delFlag,jdbcType=VARCHAR}
+    where  usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

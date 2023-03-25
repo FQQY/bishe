@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.WorkMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.Work">
+        <id column="work_id" jdbcType="VARCHAR" property="workId" />
+        <result column="usr_id" jdbcType="VARCHAR" property="usrId" />
+        <result column="cat_id" jdbcType="INTEGER" property="catId" />
+        <result column="work_src" jdbcType="VARCHAR" property="workSrc" />
+        <result column="work_content" jdbcType="LONGVARCHAR" property="workContent" />
+        <result column="work_duration" jdbcType="VARCHAR" property="workDuration" />
+        <result column="work_upload_time" jdbcType="TIMESTAMP" property="workUploadTime" />
+        <result column="pass_flag" jdbcType="CHAR" property="passFlag" />
+        <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+        <result column="work_title" jdbcType="VARCHAR" property="workTitle" />
+        <result column="work_photo" jdbcType="VARCHAR" property="workPhoto" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        work_id, usr_id, cat_id, work_src, work_duration, work_upload_time, pass_flag, del_flag,work_content,work_title,work_photo
+    </sql>
+
+    <select id="selectNoPassWorks" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from work
+        where del_flag = 0
+        and pass_flag = 0
+    </select>
+
+    <select id="getAllWorks" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from work
+    </select>
+
+    <update id="updateWorkPassStatus" parameterType="com.example.springbootproject.entity.Video">
+        update work
+        set pass_flag = #{passFlag,jdbcType=CHAR}
+        where del_flag = 0
+          and work_id = #{workId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="clearResumeWorksByUsrId">
+        update work
+        set del_flag = #{delFlag,jdbcType=VARCHAR}
+        where usr_id = #{usrId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="deleteWork" parameterType="com.example.springbootproject.entity.Video">
+        update work
+        set del_flag = 1,
+        pass_flag = 0
+        <where>
+            work_id = #{workId,jdbcType=VARCHAR}
+            <if test="usrId != null and usrId.length() != 0">
+                usr_id = #{usrId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </update>
+
+
+</mapper>

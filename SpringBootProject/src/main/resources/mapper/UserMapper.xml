@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.UserMapper">
+  
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.User">
+    <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
+    <result column="usr_name" jdbcType="VARCHAR" property="usrName" />
+    <result column="usr_password" jdbcType="VARCHAR" property="usrPassword" />
+    <result column="usr_sex" jdbcType="INTEGER" property="usrSex" />
+    <result column="usr_email" jdbcType="VARCHAR" property="usrEmail" />
+    <result column="usr_register_time" jdbcType="TIMESTAMP" property="usrRegisterTime" />
+    <result column="ban_flag" jdbcType="CHAR" property="banFlag" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    <result column="usr_authority" jdbcType="CHAR" property="usrAuthority" />
+    <result column="ask_flag" jdbcType="CHAR" property="askFlag" />
+    <result column="ask_time" jdbcType="TIMESTAMP" property="askTime" />
+  </resultMap>
+
+  
+  <sql id="Base_Column_List">
+    usr_id, usr_name, usr_password, usr_sex, usr_email, usr_register_time, ban_flag, 
+    del_flag, usr_authority,ask_flag,ask_time
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+    and del_flag = 0
+  </select>
+
+  <select id="selectUserAsk"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where ask_flag = 1
+    and usr_authority = 0
+    and del_flag = 0
+    and ban_flag = 0
+  </select>
+
+
+  <!-- 查询所有用户 -->
+  <select id="selectAllUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+  </select>
+
+  <!--  登录 -->
+  <select id="userLogin" parameterType="com.example.springbootproject.entity.User" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where usr_email = #{usrEmail}
+    and usr_password = #{usrPassword}
+    and del_flag = 0
+  </select>
+
+  <!-- 确认前端发送的邮箱是否注册过 -->
+  <select id="confirmEmail" parameterType="java.lang.String" resultType="int">
+    select count(*) from user
+    where usr_email = #{usrEmail}
+  </select>
+  
+  <insert id="insert" parameterType="com.example.springbootproject.entity.User">
+    insert into user (usr_id, usr_name, usr_password, 
+      usr_sex, usr_email, usr_register_time, 
+      ban_flag, del_flag, usr_authority
+      )
+    values (#{usrId,jdbcType=VARCHAR}, #{usrName,jdbcType=VARCHAR}, #{usrPassword,jdbcType=VARCHAR}, 
+      #{usrSex,jdbcType=INTEGER}, #{usrEmail,jdbcType=VARCHAR}, #{usrRegisterTime,jdbcType=TIMESTAMP}, 
+      #{banFlag,jdbcType=CHAR}, #{delFlag,jdbcType=CHAR}, #{usrAuthority,jdbcType=CHAR}
+      )
+  </insert>
+
+  <!-- 注册用户 -->
+  <insert id="insertSelective" parameterType="com.example.springbootproject.entity.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="usrId != null and usrId.length() != 0">
+        usr_id,
+      </if>
+      <if test="usrName != null and usrName.length() != 0">
+        usr_name,
+      </if>
+      <if test="usrPassword != null and usrPassword.length() != 0">
+        usr_password,
+      </if>
+      <if test="usrSex != null">
+        usr_sex,
+      </if>
+      <if test="usrEmail != null and usrEmail.length() != 0">
+        usr_email,
+      </if>
+      <if test="usrRegisterTime != null">
+        usr_register_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="usrId != null and usrId.length() != 0">
+        #{usrId,jdbcType=VARCHAR},
+      </if>
+      <if test="usrName != null and usrName.length() != 0">
+        #{usrName,jdbcType=VARCHAR},
+      </if>
+      <if test="usrPassword != null and usrPassword.length() != 0">
+        #{usrPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="usrSex != null">
+        #{usrSex,jdbcType=INTEGER},
+      </if>
+      <if test="usrEmail != null and usrEmail.length() != 0">
+        #{usrEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="usrRegisterTime != null">
+        #{usrRegisterTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+
+  <!-- 删除用户 -->
+  <update id="deleteUserByUsrId" parameterType="java.lang.String">
+    update user
+    set del_flag = 1
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <!-- 提升用户权限 -->
+  <update id="updateUsrAuthority" parameterType="java.lang.String">
+    update user
+    set usr_authority = 1,
+        ask_flag = 0
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+    and del_flag = 0
+    and ban_flag = 0
+  </update>
+
+  <!-- 拒绝用户提升权限的请求 -->
+  <!-- 用户提交申请 -->
+  <update id="updateAskFlag" parameterType="com.example.springbootproject.entity.User">
+    update user
+    set ask_flag = #{askFlag,jdbcType=CHAR}
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+    and del_flag = 0
+    and ban_flag = 0
+  </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.springbootproject.entity.User">
+    update user
+    <set>
+      <if test="usrName != null">
+        usr_name = #{usrName,jdbcType=VARCHAR},
+      </if>
+      <if test="usrPassword != null">
+        usr_password = #{usrPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="usrSex != null">
+        usr_sex = #{usrSex,jdbcType=INTEGER},
+      </if>
+      <if test="usrEmail != null">
+        usr_email = #{usrEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="usrRegisterTime != null">
+        usr_register_time = #{usrRegisterTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="banFlag != null">
+        ban_flag = #{banFlag,jdbcType=CHAR},
+      </if>
+      <if test="usrAuthority != null">
+        usr_authority = #{usrAuthority,jdbcType=CHAR},
+      </if>
+    </set>
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+    and del_flag = 0
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.springbootproject.entity.User">
+    update user
+    set usr_name = #{usrName,jdbcType=VARCHAR},
+      usr_password = #{usrPassword,jdbcType=VARCHAR},
+      usr_sex = #{usrSex,jdbcType=INTEGER},
+      usr_email = #{usrEmail,jdbcType=VARCHAR},
+      usr_register_time = #{usrRegisterTime,jdbcType=TIMESTAMP},
+      ban_flag = #{banFlag,jdbcType=CHAR},
+      del_flag = #{delFlag,jdbcType=CHAR},
+      usr_authority = #{usrAuthority,jdbcType=CHAR}
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+</mapper>

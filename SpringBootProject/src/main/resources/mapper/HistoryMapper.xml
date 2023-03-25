@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.HistoryMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.History">
+    <id column="his_id" jdbcType="INTEGER" property="hisId" />
+    <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="view_time" jdbcType="TIMESTAMP" property="viewTime" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <!-- 联合查询 History和Video两表联合 -->
+  <resultMap extends="BaseResultMap" id="HistoryAndVideoResultMap" type="com.example.springbootproject.entity.HistoryDTO">
+    <association property="workDTO" javaType="com.example.springbootproject.entity.VideoDTO">
+      <id column="work_id" jdbcType="VARCHAR" property="workId" />
+      <result column="usr_id" jdbcType="VARCHAR" property="usrId" />
+      <result column="cat_id" jdbcType="INTEGER" property="catId" />
+      <result column="work_src" jdbcType="VARCHAR" property="workSrc" />
+      <result column="work_content" jdbcType="LONGVARCHAR" property="workContent" />
+      <result column="work_duration" jdbcType="VARCHAR" property="workDuration" />
+      <result column="work_upload_time" jdbcType="TIMESTAMP" property="workUploadTime" />
+      <result column="pass_flag" jdbcType="CHAR" property="passFlag" />
+      <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+      <result column="work_title" jdbcType="VARCHAR" property="workTitle" />
+      <result column="work_photo" jdbcType="VARCHAR" property="workPhoto" />
+    </association>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    his_id, work_id, usr_id, view_time, del_flag
+  </sql>
+
+
+  <select id="selectHistoryByUsrId" parameterType="java.lang.String" resultMap="HistoryAndVideoResultMap">
+    select
+    w.*,h.his_id,h.work_id,h.view_time,h.del_flag
+    from history h  join work w on h.work_id = w.work_id
+    where h.usr_id = #{usrId,jdbcType=VARCHAR}
+    and h.del_flag = 0
+  </select>
+
+  <select id="selectVideoHistoryByHisId" parameterType="java.lang.String" resultMap="HistoryAndVideoResultMap">
+    select
+      *
+    from history h join work v on h.work_id = v.work_id
+    where h.his_id = #{hisId,jdbcType=INTEGER}
+    and h.del_flag = 0
+  </select>
+
+  <select id="isExistHistory" parameterType="com.example.springbootproject.entity.History" resultType="int">
+    select count(*)
+    from history
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+    and del_flag = 0
+  </select>
+
+  <update id="updateViewTime" parameterType="com.example.springbootproject.entity.History">
+    update history
+    set view_time = #{viewTime,jdbcType=TIMESTAMP}
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="deleteByPrimaryKey" parameterType="com.example.springbootproject.entity.History">
+    update history
+    set del_flag = 1
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="deleteHistoryByHisId" parameterType="java.lang.Integer">
+    update history
+    set del_flag = 1
+    where his_id = #{hisId,jdbcType=INTEGER}
+  </update>
+
+  <update id="clearResumeHistoryByUsrId">
+    update history
+    set del_flag = #{delFlag,jdbcType=VARCHAR}
+    where  usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  
+  <insert id="insert" parameterType="com.example.springbootproject.entity.History">
+    insert into history
+      (work_id,usr_id,view_time)
+    values (
+        #{workId,jdbcType=VARCHAR},
+        #{usrId,jdbcType=VARCHAR},
+        #{viewTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.springbootproject.entity.History">
+    update history
+    <set>
+      <if test="viewTime != null">
+        view_time = #{viewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

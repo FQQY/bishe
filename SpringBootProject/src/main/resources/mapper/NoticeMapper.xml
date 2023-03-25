@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.NoticeMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.Notice">
+    <id column="not_id" jdbcType="INTEGER" property="notId" />
+    <result column="root_id" jdbcType="VARCHAR" property="rootId" />
+    <result column="not_content" jdbcType="LONGVARCHAR" property="notContent" />
+    <result column="not_level" jdbcType="INTEGER" property="notLevel" />
+    <result column="not_upload_time" jdbcType="TIMESTAMP" property="notUploadTime" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <resultMap id="NoticeDTOResultMap" extends="BaseResultMap" type="com.example.springbootproject.entity.NoticeDTO">
+    <association property="root" javaType="com.example.springbootproject.entity.Root">
+      <id column="root_id" jdbcType="VARCHAR" property="rootId" />
+      <result column="root_account_number" jdbcType="VARCHAR" property="rootAccountNumber" />
+      <result column="root_password" jdbcType="VARCHAR" property="rootPassword" />
+      <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    </association>
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    not_id, root_id, not_level, not_upload_time, del_flag, not_content
+  </sql>
+
+  <select id="selectByRootIdNoticeContent" parameterType="com.example.springbootproject.entity.Notice" resultMap="NoticeDTOResultMap">
+    select
+    *
+    from notice n join root r on n.root_id = r.root_id
+    where n.root_id = #{rootId,jdbcType=VARCHAR}
+    and n.not_content = #{notContent,jdbcType=LONGVARCHAR}
+    and n.del_flag = 0
+  </select>
+
+  <select id="selectALlNotice" resultMap="NoticeDTOResultMap">
+    select
+      *
+    from notice n join root r on n.root_id = r.root_id
+    where n.del_flag = 0
+  </select>
+
+  <select id="selectByNotId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from notice
+    where not_id = #{notId,jdbcType=VARCHAR}
+  </select>
+
+  <update id="deleteByNotId" parameterType="java.lang.String">
+    update notice
+    set del_flag = 1
+    where not_id = #{notId,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insert" parameterType="com.example.springbootproject.entity.Notice">
+    insert into notice ( root_id, not_level,
+      not_upload_time, not_content)
+    values ( #{rootId,jdbcType=VARCHAR}, #{notLevel,jdbcType=INTEGER},
+      #{notUploadTime,jdbcType=TIMESTAMP}, #{notContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.example.springbootproject.entity.Notice">
+    insert into notice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="notId != null">
+        not_id,
+      </if>
+      <if test="rootId != null">
+        root_id,
+      </if>
+      <if test="notLevel != null">
+        not_level,
+      </if>
+      <if test="notUploadTime != null">
+        not_upload_time,
+      </if>
+      <if test="notContent != null">
+        not_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="notId != null">
+        #{notId,jdbcType=VARCHAR},
+      </if>
+      <if test="rootId != null">
+        #{rootId,jdbcType=VARCHAR},
+      </if>
+      <if test="notLevel != null">
+        #{notLevel,jdbcType=INTEGER},
+      </if>
+      <if test="notUploadTime != null">
+        #{notUploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notContent != null">
+        #{notContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByNotId" parameterType="com.example.springbootproject.entity.Notice">
+    update notice
+    <set>
+        not_level = #{notLevel,jdbcType=INTEGER},
+      <if test="notUploadTime != null">
+        not_upload_time = #{notUploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="notContent != null">
+        not_content = #{notContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where not_id = #{notId,jdbcType=VARCHAR}
+  </update>
+
+
+
+</mapper>

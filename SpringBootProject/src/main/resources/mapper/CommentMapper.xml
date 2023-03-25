@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.CommentMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.Comment">
+    <id column="comt_id" jdbcType="INTEGER" property="comtId" />
+    <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="comt_content" jdbcType="LONGVARCHAR" property="comtContent" />
+    <result column="comt_time" jdbcType="TIMESTAMP" property="comtTime" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <resultMap id="CommentDTOResultMap" type="com.example.springbootproject.entity.CommentDTO">
+    <id column="comt_id" jdbcType="INTEGER" property="comtId" />
+    <result column="comt_content" jdbcType="LONGVARCHAR" property="comtContent" />
+    <result column="comt_time" jdbcType="TIMESTAMP" property="comtTime" />
+    <association property="user" javaType="com.example.springbootproject.entity.User">
+      <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
+      <result column="usr_name" jdbcType="VARCHAR" property="usrName" />
+      <result column="usr_password" jdbcType="VARCHAR" property="usrPassword" />
+      <result column="usr_sex" jdbcType="INTEGER" property="usrSex" />
+      <result column="usr_email" jdbcType="VARCHAR" property="usrEmail" />
+      <result column="usr_register_time" jdbcType="TIMESTAMP" property="usrRegisterTime" />
+      <result column="ban_flag" jdbcType="CHAR" property="banFlag" />
+      <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+      <result column="usr_authority" jdbcType="CHAR" property="usrAuthority" />
+    </association>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    comt_id, work_id, usr_id, comt_content, comt_time, del_flag
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="com.example.springbootproject.entity.Comment" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from comment
+    <where>
+      <if test="comtId != null and comtId != 0">
+        comt_id = #{comtId,jdbcType=INTEGER}
+      </if>
+      <if test="workId != null and workId.length() != 0">
+        work_id = #{workId,jdbcType=VARCHAR}
+      </if>
+      <if test="usrId != null and usrId.length() != 0">
+        usr_id = #{usrId,jdbcType=VARCHAR}
+      </if>
+    and del_flag = 0
+    </where>
+  </select>
+
+
+  <select id="selectCommentsByVidId" parameterType="java.lang.String" resultMap="CommentDTOResultMap">
+    select
+    comment.comt_id, comment.comt_time, comment.comt_content, user.*
+    from comment join user on comment.usr_id = user.usr_id
+    where work_id = #{workId,jdbcType=VARCHAR}
+    and comment.del_flag = 0
+  </select>
+
+
+<!--逻辑删除-->
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update comment
+    set del_flag = 1
+    where comt_id = #{comtId,jdbcType=INTEGER}
+  </update>
+
+  <update id="clearResumeCommentByUsrId">
+    update comment
+    set del_flag = #{delFlag,jdbcType=VARCHAR}
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insertComment" parameterType="com.example.springbootproject.entity.Comment">
+    insert into comment (
+      work_id,
+      usr_id,
+      comt_content,
+      comt_time)
+    values (
+        #{workId,jdbcType=VARCHAR},
+        #{usrId,jdbcType=VARCHAR},
+        #{comtContent,jdbcType=LONGVARCHAR},
+        #{comtTime,jdbcType=TIMESTAMP})
+  </insert>
+
+<!--  用户修改评论只能更改时间和内容-->
+  <update id="updateCommentByUser" parameterType="com.example.springbootproject.entity.Comment">
+    update comment
+    <set>
+      <if test="comtTime != null">
+        comt_time = #{comtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comtContent != null">
+        comt_content = #{comtContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+<!--  管理员修改评论 可以全部修改-->
+  <update id="updateCommentByAdmin" parameterType="java.lang.Integer">
+    update comment
+    set
+      work_id = #{workId,jdbcType=VARCHAR},
+      usr_id = #{usrId,jdbcType=VARCHAR},
+      comt_time = #{comtTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR},
+      comt_content = #{comtContent,jdbcType=LONGVARCHAR}
+    where comt_id = #{comtId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

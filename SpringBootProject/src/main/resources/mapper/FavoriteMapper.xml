@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.FavoriteMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.Favorite">
+    <id column="fav_id" jdbcType="INTEGER" property="favId" />
+    <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
+    <id column="favb_id" jdbcType="INTEGER" property="favbId" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <resultMap id="FavoriteDTOResultMap" extends="BaseResultMap" type="com.example.springbootproject.entity.FavoriteDTO">
+    <association property="work" javaType="com.example.springbootproject.entity.Video">
+      <id column="work_id" jdbcType="VARCHAR" property="workId" />
+      <result column="usr_id" jdbcType="VARCHAR" property="usrId" />
+      <result column="cat_id" jdbcType="INTEGER" property="catId" />
+      <result column="work_src" jdbcType="VARCHAR" property="workSrc" />
+      <result column="work_content" jdbcType="LONGVARCHAR" property="workContent" />
+      <result column="work_duration" jdbcType="VARCHAR" property="workDuration" />
+      <result column="work_upload_time" jdbcType="TIMESTAMP" property="workUploadTime" />
+      <result column="pass_flag" jdbcType="CHAR" property="passFlag" />
+      <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+      <result column="work_title" jdbcType="VARCHAR" property="workTitle" />
+      <result column="work_photo" jdbcType="VARCHAR" property="workPhoto" />
+    </association>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    fav_id, work_id, usr_id, favb_id
+  </sql>
+
+  <select id="queryByUsrIdAndFavbId" parameterType="com.example.springbootproject.entity.Favorite" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from favorite
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+    and favb_id = #{favbId,jdbcType=VARCHAR}
+    and del_flag = 0
+  </select>
+
+  <select id="queryByFavbId" parameterType="java.lang.Integer" resultMap="FavoriteDTOResultMap">
+    select
+    work.*,favorite.fav_id, favorite.work_id, favorite.usr_id, favorite.favb_id
+    from favorite join work on favorite.work_id = work.work_id
+    where favb_id = #{favbId,jdbcType=INTEGER}
+    and favorite.del_flag = 0
+  </select>
+
+  <select id="isExistThisFavorite" parameterType="com.example.springbootproject.entity.FavoriteDTO" resultType="java.lang.Integer">
+    select favb_id
+    from favorite
+    <where>
+        work_id = #{workId,jdbcType=VARCHAR}
+        and usr_id = #{usrId,jdbcType=VARCHAR}
+      <foreach collection="favbIds" item="favbId" open="and favb_id in (" close=")" separator=",">
+        #{favbId,jdbcType=INTEGER}
+      </foreach>
+        and del_flag = 0
+    </where>
+
+  </select>
+
+  <update id="deleteByUsrIdAndFavbId" parameterType="com.example.springbootproject.entity.Favorite">
+    update favorite
+    set del_flag = 1
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+      and fav_id = #{favId,jdbcType=INTEGER}
+  </update>
+
+  <update id="clearResumeFavoriteByUsrId">
+    update favorite
+    set del_flag = #{delFlag,jdbcType=VARCHAR}
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="deleteFavoriteByFavId" parameterType="java.lang.Integer">
+    update favorite
+    set del_flag = 1
+    where fav_id = #{favId,jdbcType=INTEGER}
+  </update>
+
+  <insert id="insertForVidIdAndUsrIdAndFavbId" parameterType="com.example.springbootproject.entity.Favorite">
+    insert into favorite ( work_id, usr_id, favb_id)
+    values
+    <foreach collection="favbIds" item="favbId" separator=",">
+    (#{workId,jdbcType=VARCHAR}, #{usrId,jdbcType=VARCHAR},#{favbId,jdbcType=INTEGER})
+    </foreach>
+
+  </insert>
+
+  <update id="updateByVidIdAndUsrId" parameterType="com.example.springbootproject.entity.Favorite">
+    update favorite
+    set favb_id = #{favbId,jdbcType=VARCHAR}
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="delFavoriteByUsrIdFavbId">
+    update favorite
+    set del_flag = 1
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+    and favb_id = #{favbId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

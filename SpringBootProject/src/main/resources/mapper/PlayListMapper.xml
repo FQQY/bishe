@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootproject.dao.PlayListMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.springbootproject.entity.PlayList">
+    <id column="play_id" jdbcType="INTEGER" property="playId" />
+    <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="comt_time" jdbcType="TIMESTAMP" property="comtTime" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+
+  <resultMap id="PlayListDTOResultMap" extends="BaseResultMap" type="com.example.springbootproject.entity.PlayListDTO">
+
+    <association property="workDTO" javaType="com.example.springbootproject.entity.VideoDTO">
+      <id column="work_id" jdbcType="VARCHAR" property="workId" />
+      <result column="usr_id" jdbcType="VARCHAR" property="usrId" />
+      <result column="cat_id" jdbcType="INTEGER" property="catId" />
+      <result column="work_src" jdbcType="VARCHAR" property="workSrc" />
+      <result column="work_content" jdbcType="LONGVARCHAR" property="workContent" />
+      <result column="work_duration" jdbcType="VARCHAR" property="workDuration" />
+      <result column="work_upload_time" jdbcType="TIMESTAMP" property="workUploadTime" />
+      <result column="pass_flag" jdbcType="CHAR" property="passFlag" />
+      <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+      <result column="work_title" jdbcType="VARCHAR" property="workTitle" />
+      <result column="work_photo" jdbcType="VARCHAR" property="workPhoto" />
+    </association>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    play_id, work_id, usr_id, comt_time
+  </sql>
+
+  <select id="selectPlayListDTOByUsrId" parameterType="java.lang.String" resultMap="PlayListDTOResultMap">
+    select
+    w.*,p.play_id, p.work_id, p.usr_id, p.comt_time
+    from playlist p join work w on p.work_id = w.work_id
+    where p.usr_id = #{usrId,jdbcType=VARCHAR}
+    and p.del_flag = 0
+  </select>
+
+  <select id="isExistInPlayList" parameterType="com.example.springbootproject.entity.PlayListDTO" resultType="int">
+    select
+    count(*)
+    from playlist
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+        and work_id = #{workId,jdbcType=VARCHAR}
+        and del_flag = 0
+  </select>
+
+  <update id="deleteByUsrIdAndVidId" parameterType="com.example.springbootproject.entity.PlayList">
+    update playlist
+    set del_flag = 1
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="clearResumePlayListByUsrId">
+    update playlist
+    set del_flag = #{delFlag,jdbcType=VARCHAR}
+    where usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="deletePlayListByPlayId" parameterType="java.lang.Integer">
+    update playlist
+    set del_flag = 1
+    where play_id = #{playId,jdbcType=INTEGER}
+  </update>
+
+  <insert id="insert" parameterType="com.example.springbootproject.entity.PlayList">
+    insert into playlist (work_id, usr_id,
+      comt_time)
+    values (#{workId,jdbcType=VARCHAR}, #{usrId,jdbcType=VARCHAR},
+      #{comtTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.springbootproject.entity.PlayList">
+    update playlist
+    <set>
+      <if test="comtTime != null">
+        comt_time = #{comtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where play_id = #{playId,jdbcType=INTEGER}
+      and work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.springbootproject.entity.PlayList">
+    update playlist
+    set comt_time = #{comtTime,jdbcType=TIMESTAMP}
+    where work_id = #{workId,jdbcType=VARCHAR}
+      and usr_id = #{usrId,jdbcType=VARCHAR}
+  </update>
+</mapper>
