@@ -467,6 +467,36 @@ function clearFavoriteBag(usrId, favbId) {
   return postData("/delete/clear/favoritebag",{usrId, favbId})
 }
 
+/**
+ * @func updateWorkPassStatus
+ * @desc 更新作品的通过状态
+ * @param {workId passFlag} 作品id 审核标志位
+ * @return {Promise} 
+ */
+function updateWorkPassStatus(workId, passFlag) {
+  return postData("/update/work/pass/status",{workId, passFlag})
+}
+
+/**
+ * @func getNoPassWorks
+ * @desc 获取所有还没审核的作品
+ * @param {page size}  
+ * @return {Promise} 
+ */
+function getNoPassWorks(page, size) {
+  return getData("/query/nopassworks", {page, size})
+}
+
+/**
+ * @func addTag
+ * @desc 给视频添加一个标签
+ * @param {workid tagName} 作品id 标签名字  
+ * @return {Promise} 
+ */
+function addTag(workId, tagName) {
+  return postData("/add/tag", { workId, tagName})
+}
+
 
 export { 
   Login, 
@@ -510,5 +540,8 @@ export {
   agreeUserAsk,
   refuseUserAsk,
   delFavoriteBag,
-  clearFavoriteBag
+  clearFavoriteBag,
+  updateWorkPassStatus,
+  getNoPassWorks,
+  addTag
 }

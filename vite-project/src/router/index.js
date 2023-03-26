@@ -64,7 +64,8 @@ const routes = [
       {
         path: 'index',
         name: 'userindex',
-        component: () => import('../pages/User/UserIndex.vue')
+        component: () => import('../pages/User/UserIndex.vue'),
+        meta: { isAuthenticated: true }
       },
       {
         path: 'video/:workId',
@@ -79,7 +80,7 @@ const routes = [
         props: true
       }
     ],
-    meta: { isAuthenticated: true }
+    meta: { isAuthenticated: true },
   },
   {
     path: '/admin',
@@ -90,7 +91,8 @@ const routes = [
       {
         path: 'systeminfo',
         name: 'systeminfo',
-        component: () => import('../pages/Admin/SystemInfo.vue')
+        component: () => import('../pages/Admin/SystemInfo.vue'),
+        meta: { isAuthenticated: true }
       },
       {
         path: 'addnotice',
@@ -129,7 +131,10 @@ router.beforeEach((to, from, next) => {
   // 判断用户是否登录
   if(to.meta.isAuthenticated) {
     let userData = localStorage.getItem("userData")
-    if(userData == null){
+    let adminData = localStorage.getItem("adminData")
+    if(userData == null && adminData == null){
+      // console.log(from.fullPath);
+      // console.log(from);
       next(from.fullPath)
     }else {
       next()

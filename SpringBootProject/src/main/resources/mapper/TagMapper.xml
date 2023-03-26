@@ -19,11 +19,12 @@
     tag_id, work_id, tag_name, del_flag
   </sql>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tag
-    where tag_id = #{tagId,jdbcType=VARCHAR}
+    where tag_name = #{tagName,jdbcType=VARCHAR}
+    and work_id = #{workId,jdbcType=VARCHAR}
   </select>
 
   <select id="selectTagsByVidId" parameterType="java.lang.String" resultMap="BaseResultMap">

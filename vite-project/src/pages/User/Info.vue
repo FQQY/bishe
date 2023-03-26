@@ -25,6 +25,7 @@
             @confirm="handleApply"
           >
             <a-button
+              v-if="userInfo.usrAuthority === '0'"
               :disabled="userInfo.askFlag !== '0'"
               type="primary"
               size="small"

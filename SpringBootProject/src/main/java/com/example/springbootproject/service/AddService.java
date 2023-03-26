@@ -31,6 +31,8 @@ public class AddService {
     private  NoticeMapper noticeMapper;
     @Autowired
     private  ArticleMapper articleMapper;
+    @Autowired
+    private TagMapper tagMapper;
 
     public NoticeDTO addNotice(Notice notice) {
         notice.setNotUploadTime(new Date());
@@ -107,5 +109,12 @@ public class AddService {
         article.setWorkUploadTime(new Date());
         article.setWorkId(UUIDUtil.getUUID());
         return articleMapper.insertArticle(article) > 0;
+    }
+
+    public Tag addTag(Tag tag) {
+        if(tagMapper.insertSelective(tag) > 0) {
+            return tagMapper.selectByPrimaryKey(tag.getTagName(), tag.getWorkId());
+        }
+        return null;
     }
 }

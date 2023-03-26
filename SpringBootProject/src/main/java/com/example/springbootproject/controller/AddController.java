@@ -54,4 +54,9 @@ public class AddController {
         return addService.addArticle(article);
     }
 
+    @PostMapping("/tag")
+    public Tag addTag(@RequestBody Tag tag) {
+        return addService.addTag(tag);
+    }
+
 }

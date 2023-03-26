@@ -65,7 +65,7 @@
 			<template #footer>
 				<p>
 					<span style="color: #aaa">还没有账号？</span>
-					<router-link to="/register">马上注册 👉</router-link>
+					<router-link to="/register">马上注册👉 </router-link>
 				</p>
 			</template>
 		</BaseForm>
@@ -155,6 +155,7 @@
     }
 		// 管理员登录
 		if(values.authority === "2") {
+			localStorage.setItem("authority",values.authority)
 			localStorage.setItem("adminData",JSON.stringify(data))
 			router.push("/admin")
 			return

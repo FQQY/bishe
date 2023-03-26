@@ -3,6 +3,7 @@ package com.example.springbootproject.dao;
 import com.example.springbootproject.entity.Tag;
 import com.example.springbootproject.entity.TagDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -23,9 +24,20 @@ public interface TagMapper {
 
     int insert(Tag record);
 
-    int insertSelective(Tag record);
+    /**
+     * 插入一条记录到标签表
+     * @param tag
+     * @return 返回插入成功的条数
+     */
+    int insertSelective(Tag tag);
 
-    Tag selectByPrimaryKey(String tagId);
+    /**
+     * 查询一条记录 根据标签名字和视频id
+     * @param tagName
+     * @param workId
+     * @return 符合条件的tag对象
+     */
+    Tag selectByPrimaryKey(@Param("tagName") String tagName, @Param("workId") String workId);
 
     int updateByPrimaryKeySelective(Tag record);
 
