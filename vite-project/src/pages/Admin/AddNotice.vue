@@ -147,7 +147,7 @@
     title: '公告内容',
     dataIndex: 'notContent',
     key: 'notContent',
-    width: '60%'
+    width: '50%'
   }, {
     title: '发布时间',
     dataIndex: 'notUploadTime',

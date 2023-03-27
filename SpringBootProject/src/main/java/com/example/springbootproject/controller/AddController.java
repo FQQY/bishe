@@ -19,6 +19,11 @@ public class AddController {
     @Autowired
     private AddService addService;
 
+
+    @PostMapping("/root")
+    public int addRoot(@RequestBody Root root) {
+        return addService.addRoot(root);
+    }
     @PostMapping("/favorite")
     public int addFavorite(@RequestBody FavoriteDTO f) {
         return addService.addFavorite(f);

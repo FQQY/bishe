@@ -1,6 +1,7 @@
 package com.example.springbootproject.controller;
 
 import com.example.springbootproject.dao.NoticeMapper;
+import com.example.springbootproject.dao.RootMapper;
 import com.example.springbootproject.entity.*;
 import com.example.springbootproject.service.QueryService;
 import com.example.springbootproject.util.R;
@@ -27,7 +28,13 @@ public class QueryController {
     private QueryService queryService;
     @Autowired
     private NoticeMapper noticeMapper;
+    @Autowired
+    private RootMapper rootMapper;
 
+    @GetMapping("/exist/rootaccountnumber")
+    public int isExistThisRoot(String rootAccountNumber) {
+        return rootMapper.isExistThisRoot(rootAccountNumber);
+    }
     @GetMapping("/category/articles")
     public PageInfo<ArticleDTO> getArticlesByCatId(int catId, int page, int size) {
         return queryService.queryArticlesByCatId(catId, page, size);

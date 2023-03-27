@@ -21,6 +21,12 @@
     and root_password = #{rootPassword}
   </select>
 
+  <select id="isExistThisRoot" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*)
+    from root
+    where root_account_number = #{rootAccountNumber}
+  </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

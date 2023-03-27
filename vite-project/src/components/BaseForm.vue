@@ -58,10 +58,10 @@
 	}
 
 	// 提交表单且数据验证失败后回调事件
-	const onFinishFailed = (errorInfo) => {
+	const onFinishFailed = () => {
 		// 登录失败 提示用户
-		console.log("Failed:", errorInfo)
-		MyNotification("warning",errorMsg,"您输入的格式有误，请检查完毕后再次登录！")
+		console.log("Failed:", props.errorInfo)
+		MyNotification("warning",props.errorMsg,"您输入的格式有误，请检查完毕后再次登录！")
 	}
 	// 清空表单
 	const baseFormRef = ref()

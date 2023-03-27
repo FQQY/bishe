@@ -76,6 +76,7 @@
   </insert>
 
   <!-- 注册用户 -->
+  <!-- 管理员添加用户 -->
   <insert id="insertSelective" parameterType="com.example.springbootproject.entity.User">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">

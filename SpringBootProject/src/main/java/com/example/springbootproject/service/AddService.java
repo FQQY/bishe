@@ -2,6 +2,7 @@ package com.example.springbootproject.service;
 
 import com.example.springbootproject.dao.*;
 import com.example.springbootproject.entity.*;
+import com.example.springbootproject.util.Md5Util;
 import com.example.springbootproject.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,14 @@ public class AddService {
     private  ArticleMapper articleMapper;
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private RootMapper rootMapper;
+
+    public int addRoot(Root root) {
+        root.setRootPassword(Md5Util.getMD5(root.getRootPassword()));
+        root.setRootId(UUIDUtil.getUUID());
+        return rootMapper.insertSelective(root);
+    }
 
     public NoticeDTO addNotice(Notice notice) {
         notice.setNotUploadTime(new Date());

@@ -114,6 +114,11 @@ const routes = [
         name: 'askuser',
         component: () => import('../pages/Admin/AskUser.vue')
       },
+      {
+        path: 'addroot',
+        name: 'addroot',
+        component: () => import('../pages/Admin/AddRoot.vue')
+      },
     ],
     meta: { isAuthenticated: true }
   },

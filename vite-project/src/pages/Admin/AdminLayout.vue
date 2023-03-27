@@ -84,46 +84,19 @@
                 用户申请
               </a-menu-item>
             </router-link>
+
+            <router-link :to="{name: 'addroot'}">
+              <a-menu-item key="addroot">
+                <template #icon>
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-shenqing"></use>
+                  </svg>
+                </template>
+                添加管理员
+              </a-menu-item>
+            </router-link>
           </a-sub-menu>
-          <!-- <a-sub-menu key="sub2">
-            <template #icon>
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-shoucang1"></use>
-              </svg>
-            </template>
-            <template #title>平台概况</template>
-            <a-menu-item key="7">
-              <template #icon>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-shoucang1"></use>
-                </svg>
-              </template>
-              Option 7
-            </a-menu-item>
-            <a-menu-item key="8">
-              <template #icon>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-shoucang1"></use>
-                </svg>
-              </template>
-              Option 8
-            </a-menu-item>
-            <a-menu-item key="9"><template #icon>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-shoucang1"></use>
-                </svg>
-              </template>
-              Option 9
-            </a-menu-item>
-            <a-menu-item key="10">
-              <template #icon>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-shoucang1"></use>
-                </svg>
-              </template>
-              Option 10
-            </a-menu-item>
-          </a-sub-menu> -->
+
         </a-menu>
       </a-layout-sider>
       <a-layout>
