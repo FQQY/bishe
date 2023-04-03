@@ -115,6 +115,8 @@
 		getCotegories
 	} from '@/utils/request/api';
 
+	import {MyNotification} from '@/utils/util';
+
 
 	const categories = ref([])
 	
@@ -172,18 +174,27 @@
 			articleData = await getArticlesPageByCategory(articlePage, articlePageSize, catId)
 		}
 
-		// 更新总数
-		pageInfo.total[1] = articleData.total
-		pageInfo.total[0] = videoData.total
-		// 更新pinia中的数据
-		
-		articleStore.$patch({
-			articlePage: articleData
-		})
-		videoStore.$patch({
-			videoPage: videoData
-		})
+		if(articleData.total === 0) {
+			MyNotification("warning","警告","没有符合条件的文章！")
+		} else {
+			// 更新总数
+			pageInfo.total[1] = articleData.total
+			// 更新pinia中的数据
+			articleStore.$patch({
+				articlePage: articleData
+			})
+		}
 
+		if(videoData.total === 0) {
+			MyNotification("warning","警告","没有符合条件的视频！")
+		}else {
+			// 更新总数
+			pageInfo.total[0] = videoData.total
+			// 更新pinia中的数据
+			videoStore.$patch({
+				videoPage: videoData
+			})
+		}
 
 	}
 
@@ -312,7 +323,10 @@
 		bus.on("searchCallBack",function(searchValue) {
 			clearTags()
 			initCurrentPage()
-			getWorksPage(0,searchValue)
+			if(searchValue.trim() === '') {
+				MyNotification("warning","警告","搜索内容不能为空！请重新输入")
+				return;
+			}
 			getWorksPage(0,searchValue)
 		})
 
@@ -382,17 +396,12 @@
 		}
 	}
 
- 	// .video-list,.article-list {
-	// 	min-height: 452px;
-	// }
 	.video-list {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: flex-start;
 	}
-	// .article-list {
-	// 	margin-bottom: 8px;
-	// }
+
 	.tab-title {
 		font-size: 20px;
 		font-weight: 500;

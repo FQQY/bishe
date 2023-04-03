@@ -23,10 +23,9 @@
           <a-popconfirm
             title="确定申请成为管理员?"
             @confirm="handleApply"
+            v-if="userInfo.usrAuthority === '0'"
           >
             <a-button
-              v-if="userInfo.usrAuthority === '0'"
-              :disabled="userInfo.askFlag !== '0'"
               type="primary"
               size="small"
               :style="{fontSize: '12px'}"

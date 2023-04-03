@@ -21,7 +21,7 @@ function getData(url, params=null) {
         }
       }
     ).catch(error =>{
-      reject(error.data)
+      console.log(error);
     })
   })
 }
@@ -41,7 +41,7 @@ function postData(url, params,options={}) {
         }
       }
     ).catch(error =>{
-      reject(error.data)
+      console.log(error);
     })
   })
 }

@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-  import { computed, getCurrentInstance, ref, reactive, onBeforeUnmount  } from 'vue';
+  import { computed, ref, reactive, onBeforeUnmount  } from 'vue';
   import bus from 'vue3-eventbus';
   
   import { 
@@ -35,6 +35,7 @@
     getWorkComments,
     getTags
   } from "@/utils/request/api"
+  import {MyNotification} from '@/utils/util';
 
   const props = defineProps({
     workId: {
@@ -58,7 +59,6 @@
   const favbIds = ref([]);
   const favbagName = ref("")
   const userData = JSON.parse(localStorage.getItem('userData'))
-  const { proxy } = getCurrentInstance()
 
   // 绑定事件 父组件需要展示此Modal是触发
   bus.on("isShowFavoriteModal",(isShow) => {
@@ -90,9 +90,9 @@
     loading.value = true;
     const data = await addFavorite( userData.usrId, props.workId, favbIds.value)
     if(data === -1) {
-      proxy.$message.error('已经存在')
+      MyNotification("error","失败",'已经存在')
     }else {
-      proxy.$message.success('添加成功')
+      MyNotification("success","成功",'添加成功')
     }
     loading.value = false;
     visible.value = false;
@@ -102,15 +102,22 @@
   // 用户点击新建发送创建文件夹的请求
   const handleNewBag = async () => {
     console.log(favbagName.value);
- 
-    const data = await createFavoriteBag(userData.usrId, favbagName.value)
-    if(data > 0) {
-      getFavbags(userData.usrId)
-      visible1.value = false
-      // 提示用户新建收藏夹成功
-      proxy.$message.success('收藏夹创建成功！')
+    if(favbagName.value.trim() === '') {
+      MyNotification("warning","警告","收藏夹的名字不能为空！")
+    }else {
+      const data = await createFavoriteBag(userData.usrId, favbagName.value)
+      if(data === -1) {
+        MyNotification("error","失败","该收藏夹已经存在！")
+        return 
+      }
+      if(data > 0) {
+        getFavbags(userData.usrId)
+        visible1.value = false
+        // 提示用户新建收藏夹成功
+        MyNotification("success","成功",'收藏夹创建成功！')
+      }
     }
-
+    favbagName.value = ''
   }
 
 

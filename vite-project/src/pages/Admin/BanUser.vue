@@ -36,7 +36,7 @@
                 size="small" 
                 :style="{fontSize: '12px'}"
                 danger
-              >删除</a-button>
+              >注销</a-button>
             </a-popconfirm>
             <a-popconfirm
               v-if="record.delFlag != '1' && record.banFlag === '0'"
@@ -155,11 +155,15 @@
   }
 
   const handleDel = async function(usrId) {
-    console.log("准备删除的用户id",usrId);
+    console.log("准备注销的用户id",usrId);
   
     const data = await delUser(usrId)
     if(data) {
-      dataSource.value = dataSource.value.filter( item => item.usrId != usrId)
+      dataSource.value.forEach( item => {
+        if(item.usrId === usrId) {
+          item.delFlag = "1"
+        }
+      })
       proxy.$message.success("删除成功")
     }
 

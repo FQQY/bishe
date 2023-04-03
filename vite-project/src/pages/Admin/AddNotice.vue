@@ -18,10 +18,10 @@
           autocomplete="off"
           :hideRequiredMark="true"
           ref="noticeForm"
+          :rules="rules"
         >
           <a-form-item
             name="notContent"
-            :rules="[{ required: true, message: '请输入公告内容！', trigger: ['blur','change']}]"
           >
             <a-textarea
               v-model:value="formState.notContent"
@@ -128,6 +128,8 @@
   const desc = ref(['信息通知', '提醒通知', '一般通知', '重要通知', '紧急通知'])
   const colors = ref(['blue','green','purple','orange','red'])
 
+
+
   let current = ref(1)
   let total = ref(10)
   let pageSize = ref(9)
@@ -221,7 +223,30 @@
     notContent: "",
     notLevel: 1,
   })
-  const rootData = JSON.parse(localStorage.getItem('userData'));
+  const checkNotContent = (rule, value) => {
+    if(value.trim() !== '') {
+      return Promise.resolve()
+    }
+    return Promise.reject("公告内容不能为空！")
+  }
+
+  const checkNotLevel = (rule, value) => {
+    if(value <=0 ) {
+      return Promise.reject("公告等级必须大于等于1！")
+    }
+    return Promise.resolve()
+  }
+
+  const rules = {
+    notContent: [
+      {validator: checkNotContent, trigger: ['blur','change']}
+    ],
+    notLevel: [
+      {validator: checkNotLevel, tirgger: "blur"}
+    ]
+  }
+
+  const rootData = JSON.parse(localStorage.getItem('adminData'));
   const noticeForm = ref(null)
   const sendNotice = async() => {
 
@@ -229,8 +254,10 @@
     const data = await addNotice(rootData.rootId,formState.value.notContent,formState.value.notLevel)
     if(data != null) {
       noticeForm.value.resetFields()
+      data.notUploadTime = proxy.$dayjs(data.notUploadTime)
       dataSource.value.push(data)
       loading.sendButLoading = false
+      MyNotification("success","成功","公告发布成功")
     }else {
       console.log("添加公告错误",error);
     }

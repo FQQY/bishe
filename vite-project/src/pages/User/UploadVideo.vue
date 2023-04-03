@@ -129,7 +129,7 @@
     const data = await getUserUploadVideos(userData.usrId,page,size)
     
     total.value = data.total
-    dataSource.value = data
+    dataSource.value = data.list
 
     dataSource.value.map(item => {
       let uploadTime = item.workUploadTime
@@ -138,7 +138,7 @@
   }
 
 
-    getUploadVideos(current.value, pageSize.value)
+  getUploadVideos(current.value, pageSize.value)
 
 </script>
 

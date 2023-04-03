@@ -40,7 +40,7 @@
       },
       series: [
         {
-          name: 'Access From',
+          // name: ['注销',"封禁","正常"],
           type: 'pie',
           radius: ['40%', '70%'],
           itemStyle: {

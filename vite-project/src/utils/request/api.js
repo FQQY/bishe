@@ -374,7 +374,7 @@ function getNoticesPage(page, size) {
  * @return {Promise} 
  */
 function addNotice(rootId, notContent, notLevel) {
-  return postData("/add/notice",rootId, notContent, notLevel)
+  return postData("/add/notice",{rootId, notContent, notLevel})
 }
 
 /**

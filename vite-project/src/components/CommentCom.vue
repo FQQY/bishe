@@ -64,6 +64,7 @@
     getWorkComments,
     getTags
   } from "@/utils/request/api"
+  import {MyNotification} from '@/utils/util';
 
   const props = defineProps({
     workId: {
@@ -98,17 +99,20 @@
 
   const handleSubmit = async() => {
     if(userData.banFlag === '1') {
-      MyNotification("error","警告","您的账号已经被封禁，不能删除已经上传的作品")
+      MyNotification("error","警告","您的账号已经被封禁，不能发布评论")
       return
     }
-
-    const data = await sendComment(userData.usrId, props.workId, comtContent.value)
-    if(data >0 ){
-      getComments(props.workId);
-      comtContent.value = '';
-      proxy.$message.success("发布成功！");
+    if(comtContent.value.trim() === '') {
+      MyNotification("warning","警告","评论内容不能为空！")
+    }else {
+      const data = await sendComment(userData.usrId, props.workId, comtContent.value)
+      if(data >0 ){
+        getComments(props.workId);
+        comtContent.value = '';
+        MyNotification("success","成功","发布成功！");
+      }
     }
-
+  
   }
 
   // 父组件触发此时间告诉组件应该发起请求

@@ -89,7 +89,7 @@ public class UpdateService {
     }
 
     public User sendUserAsk(User user) {
-        // 查看用户当前权限是否是审核员 是返回false
+        // 查看用户当前权限是否是审核员 是返回null
         User user1 = userMapper.selectByPrimaryKey(user.getUsrId());
         if("1".equals(user1.getUsrAuthority())) {
             return null;
