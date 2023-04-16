@@ -100,7 +100,7 @@ public class AddService {
 
     public int addPlayList(PlayList playList) {
         int i = playListMapper.isExistInPlayList(playList);
-        playList.setComtTime(new Date());
+        playList.setAddTime(new Date());
         if(i > 0) {
             // 已经存在 更新时间
             return playListMapper.updateByPrimaryKey(playList);

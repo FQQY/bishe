@@ -30,7 +30,7 @@
             <template #icon>
               <InboxOutlined />
             </template>
-            <span>收藏</span>
+            <span>收藏管理</span>
           </a-menu-item>
           <a-menu-item key="/user/center/playlist">
             <template #icon>

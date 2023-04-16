@@ -5,12 +5,14 @@
 				v-for="(item, index) in List"
 				:key="index"
 				:video="item['workDTO']"
+				:time="item.viewTime"
 				@deleteEvent="delHistory"
 			/>
 		</template>
 		<a-empty v-else/>
+		<a-back-top :visibilityHeight="200"/>
 	</div>
-	<a-backtop/>
+	
 </template>
 
 <script setup>

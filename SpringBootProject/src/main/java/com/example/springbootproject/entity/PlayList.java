@@ -17,7 +17,7 @@ public class PlayList {
 
     private String usrId;
 
-    private Date comtTime;
+    private Date addTime;
 
     private String delFlag;
 

@@ -57,7 +57,7 @@
 						title="Sure to delete?"
 						@confirm="onDelete(record.workId)"
 					>
-						<a-button type="text" danger size="small">删除</a-button>
+						<a-button type="primary" danger ghost size="small" :style="{fontSize: '12px'}">下架</a-button>
 					</a-popconfirm>
 				</template>
 				<template v-else-if="column.key === 'workUploadTime'">

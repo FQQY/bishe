@@ -183,7 +183,7 @@
     userInfo.usrName = data.usrName
     userInfo.usrEmail = data.usrEmail
     userInfo.usrSex = data.usrSex
-      
+    MyNotification("success","成功","已更新")
 
     visible.value = false;
   };

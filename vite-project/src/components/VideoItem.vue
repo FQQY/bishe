@@ -6,7 +6,7 @@
         <div v-show="!video.workSrc" class="article-photo">无</div>
       </div>
       <div class="his-info">
-        <p class="vid-title">{{video.workTitle}}</p>
+        <p class="vid-title">{{video.workTitle}}&nbsp;&nbsp;&nbsp;<span :style="{fontSize: '12px',color: '#ccc',fontWeight: 'normal'}">{{addTime.fromNow()}}</span></p>
         <div class="del-icon">
           <delete-outlined :style="{fontSize: '16px'}" @click="del()"/>
         </div>
@@ -22,17 +22,24 @@
 </template>
 
 <script setup>
+  import { computed, getCurrentInstance } from "vue";
   import { useRouter } from "vue-router"
 
   import {addHistory} from '../utils/request/api';
 
   const props = defineProps({
-    video: Object
+    video: Object,
+    time: {
+      type: String,
+      default: ''
+    }
   })
   const emit = defineEmits(['deleteEvent'])
   const userData = JSON.parse(localStorage.getItem('userData'))
 
   const router = useRouter()
+  const {proxy} = getCurrentInstance()
+  const addTime = computed(() => proxy.$dayjs(props.time))
 
   const del = () => {
     emit('deleteEvent', props.video)

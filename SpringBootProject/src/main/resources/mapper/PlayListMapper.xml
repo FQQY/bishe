@@ -6,7 +6,7 @@
     <id column="play_id" jdbcType="INTEGER" property="playId" />
     <id column="usr_id" jdbcType="VARCHAR" property="usrId" />
     <result column="work_id" jdbcType="VARCHAR" property="workId" />
-    <result column="comt_time" jdbcType="TIMESTAMP" property="comtTime" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
     <result column="del_flag" jdbcType="CHAR" property="delFlag" />
   </resultMap>
 
@@ -28,12 +28,12 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    play_id, work_id, usr_id, comt_time
+    play_id, work_id, usr_id, add_time
   </sql>
 
   <select id="selectPlayListDTOByUsrId" parameterType="java.lang.String" resultMap="PlayListDTOResultMap">
     select
-    w.*,p.play_id, p.work_id, p.usr_id, p.comt_time
+    w.*,p.play_id, p.work_id, p.usr_id, p.add_time
     from playlist p join work w on p.work_id = w.work_id
     where p.usr_id = #{usrId,jdbcType=VARCHAR}
     and p.del_flag = 0
@@ -69,16 +69,16 @@
 
   <insert id="insert" parameterType="com.example.springbootproject.entity.PlayList">
     insert into playlist (work_id, usr_id,
-      comt_time)
+      add_time)
     values (#{workId,jdbcType=VARCHAR}, #{usrId,jdbcType=VARCHAR},
-      #{comtTime,jdbcType=TIMESTAMP})
+      #{addTime,jdbcType=TIMESTAMP})
   </insert>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.example.springbootproject.entity.PlayList">
     update playlist
     <set>
       <if test="comtTime != null">
-        comt_time = #{comtTime,jdbcType=TIMESTAMP},
+        add_time = #{addTime,jdbcType=TIMESTAMP},
       </if>
       <if test="delFlag != null">
         del_flag = #{delFlag,jdbcType=CHAR},
@@ -91,7 +91,7 @@
 
   <update id="updateByPrimaryKey" parameterType="com.example.springbootproject.entity.PlayList">
     update playlist
-    set comt_time = #{comtTime,jdbcType=TIMESTAMP}
+    set add_time = #{addTime,jdbcType=TIMESTAMP}
     where work_id = #{workId,jdbcType=VARCHAR}
       and usr_id = #{usrId,jdbcType=VARCHAR}
   </update>

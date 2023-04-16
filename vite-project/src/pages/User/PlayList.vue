@@ -6,11 +6,12 @@
         v-for="(item, index) in List" 
         :key="index" 
         :video="item['workDTO']"
+        :time="item.addTime"
         @deleteEvent="delHistory"
       />
     </template>
   </div>
-  <a-backtop/>
+  <a-back-top/>
 </template>
 
 <script setup>
