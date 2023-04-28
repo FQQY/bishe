@@ -35,15 +35,21 @@
             <div class="video-control">
               <ul>
                 <li @click="onClickFavorite">
-                  <star-outlined class="icon"/>
+                  <svg class="icon" aria-hidden="true" :style="iconStyle">
+                    <use xlink:href="#icon-shoucang1"></use>
+                  </svg>
                   <p>收藏</p>
                 </li>
                 <li @click="onClickPlayList">
-                  <history-outlined class="icon"/>
+                  <svg class="icon" aria-hidden="true" :style="iconStyle">
+                    <use xlink:href="#icon-shaohouguankan"></use>
+                  </svg>
 							    <p>稍后观看</p>
                 </li>
                 <li @click="activeKey = '2'">
-                  <message-outlined class="icon"/>
+                  <svg class="icon" aria-hidden="true" :style="iconStyle">
+                    <use xlink:href="#icon-pinglun1"></use>
+                  </svg>
                   <p>评论</p>
                 </li>
               </ul>
@@ -91,6 +97,7 @@
     workId: String
   })
   
+  const iconStyle = reactive({ fontSize: "25px" });
 
   // 获取当前组件实例对象
 	const { proxy } = getCurrentInstance()

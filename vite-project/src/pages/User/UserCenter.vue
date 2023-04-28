@@ -16,44 +16,56 @@
           
           <a-menu-item key="/user/center/info">
             <template #icon>
-              <PieChartOutlined />
+              <svg class="icon" aria-hidden="true" :style="iconStyle">
+                <use xlink:href="#icon-gerenxinxi2"></use>
+              </svg>
             </template>
             <span>个人信息</span>
           </a-menu-item>
           <a-menu-item key="/user/center/history">
             <template #icon>
-              <DesktopOutlined />
+              <svg class="icon" aria-hidden="true" :style="iconStyle">
+                <use xlink:href="#icon-lishi2"></use>
+              </svg>
             </template>
             <span>观看历史</span>
           </a-menu-item>
           <a-menu-item key="/user/center/favorite">
             <template #icon>
-              <InboxOutlined />
+              <svg class="icon" aria-hidden="true" :style="iconStyle">
+                <use xlink:href="#icon-shoucang1"></use>
+              </svg>
             </template>
             <span>收藏管理</span>
           </a-menu-item>
           <a-menu-item key="/user/center/playlist">
             <template #icon>
-              <InboxOutlined />
+              <svg class="icon" aria-hidden="true" :style="iconStyle">
+                <use xlink:href="#icon-shaohouguankan"></use>
+              </svg>
             </template>
             <span>稍后观看</span>
           </a-menu-item>
           <a-sub-menu>
             <template #icon>
-              <InboxOutlined />
+              <svg class="icon" aria-hidden="true" >
+                <use xlink:href="#icon-fabu"></use>
+              </svg>
             </template>
             <template #title>发布</template>
               <a-menu-item key="/user/center/uploadvideo">
                 <template #icon>
-                  <InboxOutlined />
+                  <svg class="icon" aria-hidden="true" :style="iconStyle">
+                    <use xlink:href="#icon-shipinbofang"></use>
+                  </svg>
                 </template>
                 视频
               </a-menu-item>
             
               <a-menu-item key="/user/center/uploadarticle">
                 <template #icon>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-shenqing"></use>
+                  <svg class="icon" aria-hidden="true" :style="iconStyle">
+                    <use xlink:href="#icon-wenzhang1"></use>
                   </svg>
                 </template>
                 文章
@@ -82,6 +94,7 @@
   const router = useRouter()
   const route = useRoute()
   const authority = JSON.parse(localStorage.getItem('authority'))
+  const iconStyle = reactive({ fontSize: "15px"}); 
 
   const state = reactive({
     collapsed: false,

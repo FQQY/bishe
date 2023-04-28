@@ -27,7 +27,7 @@
             <a-menu-item key="systeminfo">
               <template #icon>
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-gonggao1"></use>
+                  <use xlink:href="#icon-gaikuang"></use>
                 </svg>
               </template>
               平台概况
@@ -38,7 +38,7 @@
             <a-menu-item key="addnotice">
               <template #icon>
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-gonggao1"></use>
+                  <use xlink:href="#icon-fabu1"></use>
                 </svg>
               </template>
               发布公告
@@ -89,7 +89,7 @@
               <a-menu-item key="addroot">
                 <template #icon>
                   <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-shenqing"></use>
+                    <use xlink:href="#icon-tianjiaguanliyuan"></use>
                   </svg>
                 </template>
                 添加管理员

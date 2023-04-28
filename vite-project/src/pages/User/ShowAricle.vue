@@ -26,13 +26,25 @@
       <!-- 操作按钮 -->
       <div class="article-do">
         <a-button shape="circle" size="large" @click="onClickFavorite">
-          <template #icon><StarOutlined /></template>
+          <template #icon>
+            <svg class="icon" aria-hidden="true" :style="iconStyle">
+              <use xlink:href="#icon-shoucang1"></use>
+            </svg>
+          </template>
         </a-button>
         <a-button shape="circle" size="large" @click="onClickPlayList">
-          <template #icon><HistoryOutlined /></template>
+          <template #icon>
+            <svg class="icon" aria-hidden="true" :style="iconStyle">
+              <use xlink:href="#icon-shaohouguankan"></use>
+            </svg>
+          </template>
         </a-button>
         <a-button shape="circle" size="large" @click="scrollToComment">
-          <template #icon><MessageOutlined /></template>
+          <template #icon>
+            <svg class="icon" aria-hidden="true" :style="iconStyle">
+              <use xlink:href="#icon-pinglun1"></use>
+            </svg>
+          </template>
         </a-button>      
       </div>
     </div>
@@ -47,7 +59,7 @@
 </template>
 
 <script setup>
-  import { computed, getCurrentInstance, ref } from 'vue';
+  import { computed, getCurrentInstance, ref, reactive } from 'vue';
   import bus from 'vue3-eventbus';
 
   import FavoriteModal from '@/components/FavoriteModal.vue';  
@@ -69,7 +81,7 @@
   
   const { proxy } = getCurrentInstance()
   const userData = JSON.parse(localStorage.getItem('userData'))
-
+  const iconStyle = reactive({ fontSize: "25px" });
   // 当前文章的详细信息对象
   const currentArticle = computed(() => JSON.parse(localStorage['currentArticle']))
 
@@ -123,6 +135,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        text-align: center;
       }
     }
   }

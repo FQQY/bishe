@@ -161,7 +161,7 @@
 			if (dataSource.value.length == 0) {
 				proxy.$message.info("暂时没有新的任务");
 			} else {
-				proxy.$message.success("您的任务已到达！");
+				proxy.$message.success("新的任务已到达！");
 			}
 		}
 	};

@@ -60,15 +60,21 @@
 				</a-dropdown>
 				<ul class="user_list">
 					<li @click="jumpCenter('/user/center/history')">
-						<clock-circle-outlined :style="iconStyle" />
+						<svg class="icon" aria-hidden="true" :style="iconStyle">
+							<use xlink:href="#icon-lishi2"></use>
+						</svg>
 						<p>观看历史</p>
 					</li>
 					<li @click="jumpCenter('/user/center/favorite')">
-						<star-outlined :style="iconStyle" />
+						  <svg class="icon" aria-hidden="true" :style="iconStyle">
+                <use xlink:href="#icon-shoucang1"></use>
+              </svg>
 						<p>收藏</p>
 					</li>
 					<li @click="jumpCenter('/user/center/playlist')">
-						<history-outlined :style="iconStyle" />
+						<svg class="icon" aria-hidden="true" :style="iconStyle">
+							<use xlink:href="#icon-shaohouguankan"></use>
+						</svg>
 						<p>稍后观看</p>
 					</li>
 				</ul>
