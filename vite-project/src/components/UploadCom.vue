@@ -85,14 +85,14 @@
 <script setup>
   import { ref, reactive, getCurrentInstance } from 'vue';
   import axios from 'axios';
-
+  import { MyNotification } from '@/utils/util';
   import {postData} from '@/utils/request/http';
 
   
   const { proxy } = getCurrentInstance()
   const userData = JSON.parse(localStorage.getItem('userData'))
   const categories = JSON.parse(localStorage.getItem('categories'))
-
+  const emits = defineEmits(['refresh'])
 
   // 上传组件
   const fileList = ref([])
@@ -131,7 +131,8 @@
     const data = await postData("/upload/video",formData,{headers: {"Content-Type": "multipart/form-data"}})
     console.log(data);
     if(data.data > 0) {
-      console.log("上传成功");
+      emits("refresh")
+      MyNotification("success","成功","上传成功");
       uploading.value = false
       visible.value = false
       fileList.value.splice(0)
@@ -145,29 +146,6 @@
     catId: 'default'
   })
   const formRef = ref(null)
-
-
-  // const getVideoDuration = file => {
-  //   let url = URL.createObjectURL(file)
-  //   let audioElement = new Audio(url);
-  //   let duration
-  //   let minute
-  //   let second
-  //   audioElement.addEventListener("loadedmetadata", function (_event) {
-  //     duration = audioElement.duration; //时长为秒，小数，182.36
-  //     //   this.$parent.$data.wDuration = parseInt(duration)
-  //     console.log(duration)
-  //     duration = Math.floor(duration)
-  //     setTimeout(() => {
-  //       minute = Math.floor(duration / 60)
-  //       second = duration % 60
-  //       formState.vidDuration = minute < 0 ? '0' : '' + minute + ":" + second < 0 ? '0' : '' + second
-  //     }, 2000);
-      
-  //   })
-
-  // }
-
 
 
 </script>

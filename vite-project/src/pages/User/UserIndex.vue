@@ -30,7 +30,6 @@
 			<a-tabs 
 				v-model:activeKey="activeKey" 
 				size="large" 
-				@change="clearTags()"
 				animated
 				type="card"
 			>
@@ -175,7 +174,7 @@
 		}
 
 		if(articleData.total === 0) {
-			MyNotification("warning","警告","没有符合条件的文章！")
+			// MyNotification("warning","警告","没有符合条件的文章！")
 		} else {
 			// 更新总数
 			pageInfo.total[1] = articleData.total

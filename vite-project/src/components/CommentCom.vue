@@ -13,8 +13,9 @@
             <a-comment :author="item.user.usrName">
               <template #avatar>
                 <a-avatar
+                  size="large"
                   shape="square"
-                  :style="{ backgroundColor:colorList[Math.round(Math.random()*colorList.length)], verticalAlign: 'middle' }"
+                  :style="{ backgroundColor:colorList[Math.round(Math.random()*colorList.length)], verticalAlign: 'middle', fontSize:'16px' }"
                 >
                   {{ item.user.usrName[0].toUpperCase() }}
                 </a-avatar>
@@ -30,6 +31,20 @@
                 </a-tooltip>
               </template>
             </a-comment>
+            <a-popconfirm
+              title="确定要删除这条评论？"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="delComm(item.comtId)"
+              
+            >
+              <p
+              v-if="item.user.usrId === userData.usrId"
+              :style="{color:'red',fontSize:'12px',cursor: 'pointer', width:'80px'}"
+
+              >删除</p>
+            </a-popconfirm>
+            
           </a-list-item>
         </template>
       </a-list>
@@ -62,7 +77,8 @@
     getUserFavoriteBags,
     addPlayList,
     getWorkComments,
-    getTags
+    getTags,
+    delComment
   } from "@/utils/request/api"
   import {MyNotification} from '@/utils/util';
 
@@ -87,13 +103,25 @@
   const getComments = async(workId) => {
    
     const comments = await getWorkComments(workId)
+    commentList.value = comments
     if(comments.length != 0) {
       
-      commentList.value = comments
+      
       commentList.value.map(comment => {
         let comtTime = comment.comtTime;
         comment.comtTime = proxy.$dayjs(comtTime)
       })
+    }
+  }
+
+  const delComm = async(comtId) => {
+    console.log(comtId);
+    const success = await delComment(comtId)
+    if(success) {
+      getComments(props.workId)
+      MyNotification("success","成功","删除成功！")
+    }else {
+      MyNotification("error","失败","删除失败！")
     }
   }
 

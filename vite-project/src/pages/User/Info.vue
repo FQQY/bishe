@@ -9,7 +9,7 @@
       <a-descriptions-item label="性别">{{userInfo.usrSex ? '女' : '男'}}</a-descriptions-item>
       <a-descriptions-item label="密码" :span="2">
         <a-space :size="20">
-          <span @click="isShow = !isShow">{{isShow ? userInfo.usrPassword : '*******'}}</span>
+          <span>{{'*******'}}</span>
           <a-button 
             type="primary" 
             :style="{fontSize: '12px'}" 
@@ -21,7 +21,7 @@
         <a-space :size="50">
           {{userInfo.usrAuthority === '1' ? '审核员':'普通用户'}}
           <a-popconfirm
-            title="确定申请成为管理员?"
+            title="确定申请成为审核员?"
             @confirm="handleApply"
             v-if="userInfo.usrAuthority === '0'"
           >
@@ -110,7 +110,6 @@
   const { proxy } = getCurrentInstance()
   const router = useRouter()
 
-  const isShow = ref(false)
 
   const handleApply = async() => {
     if(userInfo.askFlag === "1") {

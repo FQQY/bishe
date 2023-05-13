@@ -55,5 +55,10 @@ public interface VideoMapper {
 
     int updateByPrimaryKeyWithBLOBs(Video record);
 
-    int updateByPrimaryKey(Video record);
+    /**
+     * 删除视频
+     * @param video
+     * @return 删除视频成功的条数
+     */
+    int updateByPrimaryKey(Video video);
 }

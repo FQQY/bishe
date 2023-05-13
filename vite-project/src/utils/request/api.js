@@ -497,6 +497,16 @@ function addTag(workId, tagName) {
   return postData("/add/tag", { workId, tagName})
 }
 
+/**
+ * @func delComment
+ * @desc 删除当前用户评论
+ * @param {comtId}  评论id
+ * @return {Promise} 
+ */
+function delComment(comtId) {
+  return getData("/delete/comment",{comtId})
+}
+
 
 export { 
   Login, 
@@ -543,5 +553,6 @@ export {
   clearFavoriteBag,
   updateWorkPassStatus,
   getNoPassWorks,
-  addTag
+  addTag,
+  delComment
 }

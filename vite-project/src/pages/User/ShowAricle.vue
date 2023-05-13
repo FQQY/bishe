@@ -5,11 +5,15 @@
         <a-typography-title 
           :ellipsis="{ rows: 2 }"
           :style="{
-            lineHeight: '56px'
+            width: '80%',
+            margin: 'auto',
+            lineHeight: '56px',
+            textAlign: 'center',
           }"
+          :level="2"
           :content="currentArticle.workTitle"
         />
-        <div :style="{marginBottom: '40px'}">
+        <div :style="{margin: '50px 0 20px 0'}">
           <span>{{proxy.$dayjs(currentArticle.workUploadTime).format('YYYY-MM-DD HH:mm')}}</span>&nbsp;&nbsp;
           <span>{{currentArticle.user.usrName}}</span>
         </div>
@@ -122,6 +126,9 @@
         padding: 16px;
         .text {
           text-align: left;
+          font-size: 18px;
+          line-height: 32px;
+          text-indent: 2em;
           
         }
       }

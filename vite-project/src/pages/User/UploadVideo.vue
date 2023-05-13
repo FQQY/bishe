@@ -1,7 +1,7 @@
 <template>
   <div class="upload-wrapper">
     <div class="upload-content">
-      <UploadCom></UploadCom>
+      <UploadCom @refresh="() => getUploadVideos(current, pageSize)"></UploadCom>
     </div>
     <div class="upload-video-container">
       <div class="table-container">
@@ -64,6 +64,7 @@
   import { ref, computed, getCurrentInstance } from "vue";
 
   import { delVideo, getUserUploadVideos } from '@/utils/request/api';
+  import { MyNotification } from '@/utils/util';
   import UploadCom from "@/components/UploadCom.vue"
 
   const columns = [{

@@ -80,7 +80,15 @@ public class DeleteService {
         return favoriteMapper.delFavoriteByUsrIdFavbId(favorite.getUsrId(), favorite.getFavbId()) > 0;
     }
 
+    //删除评论
+    public boolean delComment(Integer comtId) {
+        return commentMapper.deleteByPrimaryKey(comtId) > 0;
+    }
 
+    //删除视频
+    public boolean delVideo(Video video) {
+        return videoMapper.updateByPrimaryKey(video) > 0;
+    }
 
 
 }

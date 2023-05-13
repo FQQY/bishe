@@ -194,13 +194,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.springbootproject.entity.Video">
     update work
-    set usr_id = #{usrId,jdbcType=VARCHAR},
-      cat_id = #{catId,jdbcType=INTEGER},
-      work_src = #{workSrc,jdbcType=VARCHAR},
-      work_duration = #{workDuration,jdbcType=VARCHAR},
-      work_upload_time = #{workUploadTime,jdbcType=TIMESTAMP},
-      pass_flag = #{passFlag,jdbcType=CHAR},
-      del_flag = #{delFlag,jdbcType=CHAR}
+    set del_flag = 1
     where work_id = #{workId,jdbcType=VARCHAR}
+    and usr_id = #{usrId,jdbcType=VARCHAR}
   </update>
 </mapper>

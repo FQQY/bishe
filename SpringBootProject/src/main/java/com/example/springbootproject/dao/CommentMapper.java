@@ -21,6 +21,11 @@ public interface CommentMapper {
 
     Comment selectByPrimaryKey(Comment comment);
 
+    /**
+     * 删除评论
+     * @param comtId
+     * @return 删除成功的条数
+     */
     int deleteByPrimaryKey(Integer comtId);
 
     /**

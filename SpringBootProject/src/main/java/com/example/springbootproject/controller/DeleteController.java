@@ -3,10 +3,7 @@ package com.example.springbootproject.controller;
 import com.example.springbootproject.entity.*;
 import com.example.springbootproject.service.DeleteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author fqgxing
@@ -18,6 +15,11 @@ public class DeleteController {
 
     @Autowired
     private DeleteService deleteService;
+
+    @PostMapping("/video")
+    public boolean delVideo(@RequestBody Video video) {
+        return deleteService.delVideo(video);
+    }
 
     @PostMapping("/notice")
     public boolean delNotice(@RequestBody Notice notice) {
@@ -58,6 +60,12 @@ public class DeleteController {
     @PostMapping("/clear/favoritebag")
     public boolean clearFavoriteBag(@RequestBody Favorite favorite) {
         return deleteService.clearFavoriteBag(favorite);
+    }
+
+    @GetMapping("/comment")
+    public boolean delComment(Integer comtId) {
+        System.out.println(comtId);
+        return deleteService.delComment(comtId);
     }
 
 
